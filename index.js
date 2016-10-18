@@ -116,11 +116,12 @@ app.post('/addusershot', function (req, res) {
     var shotIn = req.body.shotIn;
     var angle = req.body.angle;
     var distance = req.body.distance;
+	var shotTime = new Date().getTime();
     var sql;
     if(shotIn == 0){
         sql = 'INSERT gameUserShotDetail (gameid,userid,shotIn) VALUES ('+gameid+',"'+userid+'",0)';
     }else{
-        sql = 'INSERT gameUserShotDetail (gameid,userid,shotIn,angle,distance) VALUES ('+gameid+',"'+userid+'",1,'+angle+','+distance+')';
+        sql = 'INSERT gameUserShotDetail (gameid,userid,shotIn,angle,distance,shotTime) VALUES ('+gameid+',"'+userid+'",1,'+angle+','+distance+','+shotTime+')';
     }
     console.log(sql);
     //select

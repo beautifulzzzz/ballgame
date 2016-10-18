@@ -16,7 +16,7 @@ POST
 
 ##2.设置步数 setGameUserSteps
 
-http://139.224.67.24:8002/setGameUserSteps
+http://139.224.67.24:8002/setusersteps
 POST
 {
 	"gameid":7,
