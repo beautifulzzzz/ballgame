@@ -212,3 +212,95 @@ app.get('/userSteps', function (req, res) {
         res.send(JSON.stringify(userStepsInfo));
     });
 });
+
+/** 查询某用户某个比赛的投球情况*/
+app.get('/userShotResults', function (req, res) {
+    res.contentType('json');//返回的数据类型
+    console.log("userShotResults called");
+    if(req.query.gameid == undefined || req.query.userid == undefined){
+        res.send(JSON.stringify({error:"请传递完整参数"}));
+        return;
+    }
+    var gameid = req.query.gameid;
+    var userid = req.query.userid;
+	var shotIn = req.query.shotIn;
+
+	var sql = 'select shotIn, COUNT(*) as NUM FROM gameUserShotDetail WHERE gameid='+gameid+' AND userid="'+userid+'" GROUP BY shotIn';
+
+	console.log(sql);
+	
+    //select
+    conn.query(sql, function (err, result) {
+        if (err){
+            console.log(err);
+            res.send(JSON.stringify({error:"error"}));
+            return;
+        };
+        if(result.length == 0){
+            res.send(JSON.stringify({error:"no found data"}));
+            return;
+        }
+		
+		//console.log(result);
+		//console.log(result.length);
+		
+		var userShotResults;
+		
+		if(result.length==2){
+			userShotResults= {
+				error:null,
+				shotNum:(result[0].NUM + result[1].NUM),
+				shotInNum:result[1].NUM,
+			}
+		}else if(result.length==1){
+			userShotResults= {
+				error:null,
+				shotNum:result[0].NUM,
+				shotInNum:result[0].shotIn == 0 ? 0:result[0].NUM,
+			}
+		}else{
+			userShotResults= {
+				error:null,
+				shotNum:0,
+				shotInNum:0,
+			}
+		}
+		
+        res.send(JSON.stringify(userShotResults));
+    });
+});
+
+/** 查询某用户某比赛的投球细节*/
+app.get('/userShotDetails', function (req, res) {
+    res.contentType('json');//返回的数据类型
+    console.log("userShotDetails called");
+    if(req.query.gameid == undefined || req.query.userid == undefined){
+        res.send(JSON.stringify({error:"请传递完整参数"}));
+        return;
+    }
+    var gameid = req.query.gameid;
+    var userid = req.query.userid;
+    var sql = 'SELECT * FROM gameUserShotDetail WHERE gameid='+gameid+' AND userid="'+userid+'"';
+    
+	console.log(sql);
+    //select
+    conn.query(sql, function (err, result) {
+        if (err){
+            console.log(err);
+            res.send(JSON.stringify({error:"error"}));
+            return;
+        };
+        if(result.length == 0){
+            res.send(JSON.stringify({error:"no found data"}));
+            return;
+        }
+		
+		var userShotDetails = {
+            error:null,
+            detail:result,
+        }
+		
+        res.send(JSON.stringify(userShotDetails));
+    });
+});
+

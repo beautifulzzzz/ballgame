@@ -87,20 +87,11 @@ http://139.224.67.24:8002/userShotResults?gameid=7&userid=100
 }
 
 ###4.查询某用户某比赛的投球细节
-http://139.224.67.24:8002/userShotDetails?gameid=7&userid=100    
-POST    
-{    
-　　"shotIn":1,    
-　　"fromItem":10,    
-　　"numItem":5   
-}
-> - shotIn 为1表示查询投中的细节；为0表示查询未投中的细节；为2表示查询所有投球细节
-> - fromItem, numItem 表示从fromItem开始往前查numItem个投球细节（注意：numItem为投中和未投中的总数）   
+http://139.224.67.24:8002/userShotDetails?gameid=7&userid=100     
 
 返回参数：error == null 表示无错误，否则有错          
 {         
-　　"error":null,     
-　　"backNum":3,      
+　　"error":null,         
 　　"detail":[    
 　　　　　　{"shotIn":1,"angle":40,"distance":210,"shotTime":'1476774088446'},   
 　　　　　　{"shotIn":1,"angle":30,"distance":230,"shotTime":'1476774088357'},   
