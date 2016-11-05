@@ -9,15 +9,37 @@ console.log('Server running.');
 
 //连接mysql
 var mysql = require('mysql');
-var conn = mysql.createConnection({
+var db_config = {
     host: 'localhost',
     user: 'root',
     password: 'root',
     database:'ballgame',
     port: 3306
-});
-conn.connect();
-console.log("Connect Mysql Success");
+};
+function handleDisconnect() {
+  conn = mysql.createConnection(db_config); // Recreate the connection, since
+                                                  // the old one cannot be reused.
+  conn.connect(function(err) {              // The server is either down
+    if(err) {                                     // or restarting (takes a while sometimes).
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+    }                                     // to avoid a hot loop, and to allow our node script to
+  });                                     // process asynchronous requests in the meantime.
+                                          // If you're also serving http, display a 503 error.
+  conn.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect();                         // lost due to either server restart, or a
+    } else {                                      // connnection idle timeout (the wait_timeout
+      throw err;                                  // server variable configures this)
+    }
+  });
+  
+  console.log("Connect Mysql Success");
+}
+
+handleDisconnect();
+
 
 //设定路由
 //使用body-parser解析body参数
@@ -304,3 +326,15 @@ app.get('/userShotDetails', function (req, res) {
     });
 });
 
+var fs = require('fs'); 
+/** 主页*/
+app.get('/online', function (req, res) {
+	fs.readFile('./shotBall/ball.html', 'utf-8',function (err, data) {//读取内容 
+		if (err) throw err; 
+		res.writeHead(200, { 
+			"Content-Type": "text/html" 
+		}); 
+		res.write(data); 
+		res.end(); 
+	}); 
+});
