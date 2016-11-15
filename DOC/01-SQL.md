@@ -10,7 +10,7 @@ Reference：[http://dev.mysql.com/doc/refman/5.7/en/database-use.html][#4]
 ![][#1]
 
 ### Select database:
-> mysql> select ballgame;
+> mysql> use ballgame;
 
 ### Show tables:
 > mysql> show tables;
@@ -34,6 +34,12 @@ Reference:[http://dev.mysql.com/doc/refman/5.7/en/counting-rows.html][#5]
 > select shotIn, COUNT(*) as NUM FROM gameUserShotDetail GROUP BY shotIn;
 
 ![][#7]
+
+## Clear Data
+> truncate gameHistory;    
+> truncate gameUserShot;    
+> truncate gameUserShotDetail;    
+> truncate gameUserSteps;    
 
 [#1]:http://odff1d90v.bkt.clouddn.com/16-10-22/99754250.jpg
 [#2]:http://odff1d90v.bkt.clouddn.com/16-10-22/1376072.jpg
